@@ -10,31 +10,45 @@
 class Slave : public Dezibot {
 public:
   Slave(SlaveState state,
-        const std::function<void()> findChargingStation,
-        const std::function<void()> enterChargingStation,
-        const std::function<void()> exitChargingStation)
-      : state(state),
-        findChargingStation(findChargingStation),
-        enterChargingStation(enterChargingStation),
-        exitChargingStation(exitChargingStation) {}
+      const std::function<void()> stepWork,
+      const std::function<bool(MasterData master)> stepToCharge,
+      const std::function<void(MasterData master)> stepWaitCharge,
+      const std::function<bool(MasterData master)> stepIntoCharge,
+      const std::function<void(MasterData master)> stepCharge,
+      const std::function<bool(MasterData master)> stepExitCharge)
+  : state(state),
+        stepToCharge(stepWork),
+        stepToCharge(stepToCharge),
+        stepWaitCharge(stepWaitCharge),
+        stepIntoCharge(stepIntoCharge),
+        stepCharge(stepCharge),
+        stepExitCharge(stepExitCharge) {}
 
-  void requestCharge(MasterData masterData);
-  void notifyWalkToCharge1(MasterData masterData);
-  void notifyInWait(MasterData masterData);
-  void notifyWalkToCharge2(MasterData masterData);
-  void notifyInCharge(MasterData masterData);
-  void requestStopCharge(MasterData masterData);
+  void step();
+  void requestCharge();
+  void requestStopCharge();
 
 private:
   SlaveState state;
-  const std::function<void()> findChargingStation;
-  const std::function<void()> enterChargingStation;
-  const std::function<void()> exitChargingStation;
+  MasterData master;
+  const std::function<void()> stepWork;
+  const std::function<bool(MasterData master)> stepToCharge;
+  const std::function<void(MasterData master)> stepWaitCharge;
+  const std::function<bool(MasterData master)> stepIntoCharge;
+  const std::function<void(MasterData master)> stepCharge;
+  const std::function<bool(MasterData master)> stepExitCharge;
 
-  void handleRequestChargeResponse(MasterData master);
-  void handleEnjoinChargeCommand(MasterData master);
-  void handleCancelChargeCommand(MasterData master);
-  void handleRequestStopChargeResponse(MasterData master);
+  void notifyWork();
+  void notifyWalkToCharge();
+  void notifyInWait();
+  void notifyWalkIntoCharge();
+  void notifyInCharge();
+  void notifyExitCharge();
+
+  void handleRequestChargeResponse(bool approved);
+  void handleEnjoinChargeCommand();
+  void handleCancelChargeCommand();
+  void handleRequestStopChargeResponse(bool approved);
 };
 
 #endif // SLAVE_H
