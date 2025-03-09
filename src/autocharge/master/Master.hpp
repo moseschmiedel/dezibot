@@ -3,7 +3,7 @@
 #include "ChargingStationState.hpp"
 #include "SlaveData.hpp"
 #include "abstractSet/AbstractSet.hpp"
-#include <optional>
+#include <functional>
 
 #ifndef MASTER_H
 #define MASTER_H
@@ -12,28 +12,37 @@ class Master : public Dezibot {
 public:
   Master(AbstractSet<SlaveData> &registered_slaves,
          ChargingStationState state,
-         std::optional<SlaveData> &charge_slave)
-       : registeredSlaves(registered_slaves), chargingStationState(state),
-         chargeSlave(charge_slave) {}
+         SlaveData *charging_slave,
+         const std::function<void(SlaveData &slave)> &handle_slave_charge_request,
+         const std::function<void(SlaveData &slave)> &handle_slave_stop_charge_request)
+      : registeredSlaves(registered_slaves),
+        chargingStationState(state),
+        chargingSlave(charging_slave),
+        handleSlaveChargeRequest(handle_slave_charge_request),
+        handleSlaveStopChargeRequest(handle_slave_stop_charge_request) {}
 
-  // command a slave to go into the charging station
-  void enjoinCharge(SlaveData slave);
-
-  // command a slave to cancel charging and return to work
-  void cancelCharge(SlaveData slave);
+  void step();
+  void enjoinCharge(SlaveData &slave);
+  void cancelCharge(SlaveData &slave);
 
 private:
   AbstractSet<SlaveData> &registeredSlaves;
   ChargingStationState chargingStationState;
-  // the slave currently charging or about to charge (enjoined)
-  std::optional<SlaveData> &chargeSlave;
+  SlaveData *chargingSlave;
+  const std::function<void(SlaveData &slave)> handleSlaveChargeRequest;
+  const std::function<void(SlaveData &slave)> handleSlaveStopChargeRequest;
 
-  void handleChargeRequest(SlaveData slave);
-  void handleWalkToCharge1Info(SlaveData slave);
-  void handleInWaitInfo(SlaveData slave);
-  void handleWalkToCharge2Info(SlaveData slave);
-  void handleInChargeInfo(SlaveData slave);
-  void handleStopChargeRequest(SlaveData slave);
+  bool stepLowerGear();
+  bool stepLiftGear();
+  bool stepClosed();
+  bool stepSlaveCharge();
+
+  void handleWorkInfo(SlaveData &slave);
+  void handleWalkToChargeInfo(SlaveData &slave);
+  void handleInWaitInfo(SlaveData &slave);
+  void handleWalkIntoChargeInfo(SlaveData &slave);
+  void handleInChargeInfo(SlaveData &slave);
+  void handleExitChargeInfo(SlaveData &slave);
 };
 
 #endif // MASTER_H

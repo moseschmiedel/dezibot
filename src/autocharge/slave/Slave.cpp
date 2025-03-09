@@ -1,5 +1,4 @@
 #include "Slave.hpp"
-#include "SlaveState.hpp"
 
 void Slave::step() {
   switch (this->state) {
