@@ -34,8 +34,9 @@ private:
 
   bool stepLowerGear();
   bool stepLiftGear();
-  bool stepClosed();
-  bool stepSlaveCharge();
+  void stepClosed();
+  bool stepAttachGear();
+  void stepSlaveCharge();
 
   void handleWorkInfo(SlaveData &slave);
   void handleWalkToChargeInfo(SlaveData &slave);

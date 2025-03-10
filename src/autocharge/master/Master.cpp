@@ -23,6 +23,13 @@ void Master::step() {
   case ChargingStationState::CLOSED:
     this->stepClosed();
     break;
+  case ChargingStationState::ATTACHING_GEAR: {
+    const bool attached = this->stepAttachGear();
+    if (attached) {
+      this->chargingStationState = ChargingStationState::SLAVE_CHARGE;
+    }
+    break;
+  }
   case ChargingStationState::SLAVE_CHARGE:
     this->stepSlaveCharge();
     break;
@@ -44,30 +51,32 @@ bool Master::stepLowerGear() {}
 
 bool Master::stepLiftGear() {}
 
-bool Master::stepClosed() {}
+void Master::stepClosed() {}
 
-bool Master::stepSlaveCharge() {}
+bool Master::stepAttachGear() {}
+
+void Master::stepSlaveCharge() {}
 
 void Master::handleWorkInfo(SlaveData &slave) {
-    slave.state = SlaveState::WORK;
+  slave.state = SlaveState::WORK;
 }
 
 void Master::handleWalkToChargeInfo(SlaveData &slave) {
-    slave.state = SlaveState::WALKING_TO_CHARGE;
+  slave.state = SlaveState::WALKING_TO_CHARGE;
 }
 
 void Master::handleInWaitInfo(SlaveData &slave) {
-    slave.state = SlaveState::WAIT_CHARGE;
+  slave.state = SlaveState::WAIT_CHARGE;
 }
 
 void Master::handleWalkIntoChargeInfo(SlaveData &slave) {
-    slave.state = SlaveState::WALKING_INTO_CHARGE;
+  slave.state = SlaveState::WALKING_INTO_CHARGE;
 }
 
 void Master::handleInChargeInfo(SlaveData &slave) {
-    slave.state = SlaveState::CHARGE;
+  slave.state = SlaveState::CHARGE;
 }
 
 void Master::handleExitChargeInfo(SlaveData &slave) {
-    slave.state = SlaveState::EXITING_CHARGE;
+  slave.state = SlaveState::EXITING_CHARGE;
 }
