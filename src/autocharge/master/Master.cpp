@@ -44,11 +44,11 @@ void Master::step() {
 }
 
 void Master::enjoinCharge(SlaveData &slave) {
-    this->communication.unicast(slave.id, "enjoinCharge");
+  this->communication.unicast(slave.id, "enjoinCharge");
 }
 
 void Master::cancelCharge(SlaveData &slave) {
-    this->communication.unicast(slave.id, "cancelCharge");
+  this->communication.unicast(slave.id, "cancelCharge");
 }
 
 bool Master::stepLowerGear() {}
@@ -83,4 +83,29 @@ void Master::handleInChargeInfo(SlaveData &slave) {
 
 void Master::handleExitChargeInfo(SlaveData &slave) {
   slave.state = SlaveState::EXITING_CHARGE;
+}
+
+void Master::onReceiveSingle(uint32_t from, String &message) {
+  SlaveData *slave = this->registeredSlaves.get(from);
+  if (slave == nullptr) {
+    return;
+  } else {
+    if (message == "requestCharge") {
+      this->enjoinCharge(*slave);
+    } else if (message == "stopCharge") {
+      this->cancelCharge(*slave);
+    } else if (message == "notifyWork") {
+      slave->state = SlaveState::WORK;
+    } else if (message == "notifyWalkToCharge") {
+      slave->state = SlaveState::WALKING_TO_CHARGE;
+    } else if (message == "notifyWalkInWait") {
+      slave->state = SlaveState::WAIT_CHARGE;
+    } else if (message == "notifyWalkIntoCharge") {
+      slave->state = SlaveState::WALKING_INTO_CHARGE;
+    } else if (message == "notifyInCharge") {
+      slave->state = SlaveState::CHARGE;
+    } else if (message == "notifyExitCharge") {
+      slave->state = SlaveState::EXITING_CHARGE;
+    }
+  }
 }

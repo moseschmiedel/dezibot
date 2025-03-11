@@ -19,7 +19,10 @@ public:
         chargingStationState(state),
         chargingSlave(charging_slave),
         handleSlaveChargeRequest(handle_slave_charge_request),
-        handleSlaveStopChargeRequest(handle_slave_stop_charge_request) {}
+        handleSlaveStopChargeRequest(handle_slave_stop_charge_request) {
+            this->communication.begin();
+            this->communication.onReceiveSingle(&onReceiveSingle);
+        }
 
   void step();
   void enjoinCharge(SlaveData &slave);
@@ -44,6 +47,8 @@ private:
   void handleWalkIntoChargeInfo(SlaveData &slave);
   void handleInChargeInfo(SlaveData &slave);
   void handleExitChargeInfo(SlaveData &slave);
+
+  void onReceiveSingle(uint32_t from, String& message);
 };
 
 #endif // MASTER_H

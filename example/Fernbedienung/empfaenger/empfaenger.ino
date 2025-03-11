@@ -18,7 +18,7 @@ void setup() {
   dezibot.begin();
   dezibot.communication.begin();
   dezibot.communication.setGroupNumber(5);
-  dezibot.communication.onReceive(&receivedCallback);
+  dezibot.communication.onReceiveGroup(&receivedCallback);
 }
 
 void loop() {

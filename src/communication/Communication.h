@@ -24,9 +24,13 @@ public:
 
     void unicast(uint32_t targetId, String msg);
 
-    void onReceive(void (*callbackFunc)(uint32_t from, String &msg));
+    void onReceiveGroup(void (*callbackFunc)(uint32_t from, String &msg));
+
+    void onReceiveSingle(void (*callbackFunc)(uint32_t from, String &msg));
+
 private:
-    static void (*userCallback)(uint32_t from, String &msg);
+    static void (*userCallbackSingle)(uint32_t from, String &msg);
+    static void (*userCallbackGroup)(uint32_t from, String &msg);
     static void receivedCallback(uint32_t from, String &msg);
     static uint32_t groupNumber;
 

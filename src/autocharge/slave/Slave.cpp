@@ -37,35 +37,35 @@ void Slave::step() {
 }
 
 void Slave::requestCharge() {
-    this->communication.unicast(this->master.id, "requestCharge");
+  this->communication.unicast(this->master.id, "requestCharge");
 }
 
 void Slave::requestStopCharge() {
-    this->communication.unicast(this->master.id, "stopCharge");
+  this->communication.unicast(this->master.id, "stopCharge");
 }
 
 void Slave::notifyWork() {
-    this->communication.unicast(this->master.id, "notifyWork");
+  this->communication.unicast(this->master.id, "notifyWork");
 }
 
 void Slave::notifyWalkToCharge() {
-    this->communication.unicast(this->master.id, "notifyWalkToCharge");
+  this->communication.unicast(this->master.id, "notifyWalkToCharge");
 }
 
 void Slave::notifyInWait() {
-    this->communication.unicast(this->master.id, "notifyInWait");
+  this->communication.unicast(this->master.id, "notifyInWait");
 }
 
 void Slave::notifyWalkIntoCharge() {
-    this->communication.unicast(this->master.id, "notifyWalkIntoCharge");
+  this->communication.unicast(this->master.id, "notifyWalkIntoCharge");
 }
 
 void Slave::notifyInCharge() {
-    this->communication.unicast(this->master.id, "notifyInCharge");
+  this->communication.unicast(this->master.id, "notifyInCharge");
 }
 
 void Slave::notifyExitCharge() {
-    this->communication.unicast(this->master.id, "notifyExitCharge");
+  this->communication.unicast(this->master.id, "notifyExitCharge");
 }
 
 void Slave::handleEnjoinChargeCommand() {
@@ -121,16 +121,12 @@ void Slave::handleCancelChargeCommand() {
   }
 }
 
-void Slave::handleRequestChargeResponse(bool approved) {
-  if (approved) {
-    this->notifyWalkToCharge();
-    this->state = SlaveState::WALKING_TO_CHARGE;
-  }
-}
-
-void Slave::handleRequestStopChargeResponse(bool approved) {
-  if (approved) {
-    this->notifyExitCharge();
-    this->state = SlaveState::EXITING_CHARGE;
+void Slave::onReceiveSingle(uint32_t from, String &message) {
+  if (from == this->master.id) {
+    if (message == "enjoinCharge") {
+      this->handleEnjoinChargeCommand();
+    } else if (message == "cancelCharge") {
+      this->handleCancelChargeCommand();
+    }
   }
 }
