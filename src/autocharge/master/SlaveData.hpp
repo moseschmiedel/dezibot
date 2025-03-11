@@ -6,10 +6,10 @@
 
 class SlaveData {
 public:
-  const std::string id;
+  const String id;
   SlaveState state;
 
-  SlaveData(const std::string& _id, SlaveState _state) : id(_id), state(_state) {}
+  SlaveData(const String& _id, SlaveState _state) : id(_id), state(_state) {}
 };
 
 #endif // SLAVEDATA_H

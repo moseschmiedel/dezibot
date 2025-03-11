@@ -1,4 +1,5 @@
 #include "Slave.hpp"
+#include "Communication.h"
 
 void Slave::step() {
   switch (this->state) {
@@ -35,21 +36,37 @@ void Slave::step() {
   }
 }
 
-void Slave::requestCharge() {}
+void Slave::requestCharge() {
+    this->communication.unicast(this->master.id, "requestCharge");
+}
 
-void Slave::requestStopCharge() {}
+void Slave::requestStopCharge() {
+    this->communication.unicast(this->master.id, "stopCharge");
+}
 
-void Slave::notifyWork() {}
+void Slave::notifyWork() {
+    this->communication.unicast(this->master.id, "notifyWork");
+}
 
-void Slave::notifyWalkToCharge() {}
+void Slave::notifyWalkToCharge() {
+    this->communication.unicast(this->master.id, "notifyWalkToCharge");
+}
 
-void Slave::notifyInWait() {}
+void Slave::notifyInWait() {
+    this->communication.unicast(this->master.id, "notifyInWait");
+}
 
-void Slave::notifyWalkIntoCharge() {}
+void Slave::notifyWalkIntoCharge() {
+    this->communication.unicast(this->master.id, "notifyWalkIntoCharge");
+}
 
-void Slave::notifyInCharge() {}
+void Slave::notifyInCharge() {
+    this->communication.unicast(this->master.id, "notifyInCharge");
+}
 
-void Slave::notifyExitCharge() {}
+void Slave::notifyExitCharge() {
+    this->communication.unicast(this->master.id, "notifyExitCharge");
+}
 
 void Slave::handleEnjoinChargeCommand() {
   switch (this->state) {

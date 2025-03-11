@@ -4,9 +4,9 @@
 #include <string>
 
 struct MasterData {
-  std::string id;
+  String id;
 
-  MasterData(std::string _id) : id(_id) {}
+  MasterData(String _id) : id(_id) {}
 };
 
 #endif // MASTERDATA_H

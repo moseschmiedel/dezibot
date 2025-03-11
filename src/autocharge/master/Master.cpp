@@ -43,9 +43,13 @@ void Master::step() {
   }
 }
 
-void Master::enjoinCharge(SlaveData &slave) {}
+void Master::enjoinCharge(SlaveData &slave) {
+    this->communication.unicast(slave.id, "enjoinCharge");
+}
 
-void Master::cancelCharge(SlaveData &slave) {}
+void Master::cancelCharge(SlaveData &slave) {
+    this->communication.unicast(slave.id, "cancelCharge");
+}
 
 bool Master::stepLowerGear() {}
 
