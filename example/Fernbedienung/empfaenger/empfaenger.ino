@@ -3,7 +3,7 @@
 
 Dezibot dezibot = Dezibot();
 
-void receivedCallback(String &msg) {
+void receivedCallback(uint32_t from, String &msg) {
   if (msg == "vorn") {
     dezibot.motion.move();
   } else if (msg == "links") {
