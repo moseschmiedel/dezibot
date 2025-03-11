@@ -45,10 +45,12 @@ void Master::step() {
 
 void Master::enjoinCharge(SlaveData &slave) {
   this->communication.unicast(slave.id, "enjoinCharge");
+  Serial.println("Commanded slave(%u) to charge", slave.id);
 }
 
 void Master::cancelCharge(SlaveData &slave) {
   this->communication.unicast(slave.id, "cancelCharge");
+  Serial.println("Commanded slave(%u) to cancel charge", slave.id);
 }
 
 bool Master::stepLowerGear() {}
@@ -86,6 +88,7 @@ void Master::handleExitChargeInfo(SlaveData &slave) {
 }
 
 void Master::onReceiveSingle(uint32_t from, String &message) {
+  Serial.printf("Received single from Node(%u): %s", from, message.c_str());
   SlaveData *slave = this->registeredSlaves.get(from);
   if (slave == nullptr) {
     return;

@@ -38,34 +38,42 @@ void Slave::step() {
 
 void Slave::requestCharge() {
   this->communication.unicast(this->master.id, "requestCharge");
+  Serial.printf("Requested master(%u) to charge", this->master.id);
 }
 
 void Slave::requestStopCharge() {
   this->communication.unicast(this->master.id, "stopCharge");
+  Serial.printf("Requested master(%u) to stop charging", this->master.id);
 }
 
 void Slave::notifyWork() {
   this->communication.unicast(this->master.id, "notifyWork");
+  Serial.printf("Notified master(%u) of work", this->master.id);
 }
 
 void Slave::notifyWalkToCharge() {
   this->communication.unicast(this->master.id, "notifyWalkToCharge");
+  Serial.printf("Notified master(%u) of walk to charge", this->master.id);
 }
 
 void Slave::notifyInWait() {
   this->communication.unicast(this->master.id, "notifyInWait");
+  Serial.printf("Notified master(%u) of wait", this->master.id);
 }
 
 void Slave::notifyWalkIntoCharge() {
   this->communication.unicast(this->master.id, "notifyWalkIntoCharge");
+  Serial.printf("Notified master(%u) of walk into charge", this->master.id);
 }
 
 void Slave::notifyInCharge() {
   this->communication.unicast(this->master.id, "notifyInCharge");
+  Serial.printf("Notified master(%u) of in charge", this->master.id);
 }
 
 void Slave::notifyExitCharge() {
   this->communication.unicast(this->master.id, "notifyExitCharge");
+  Serial.printf("Notified master(%u) of exit charge", this->master.id);
 }
 
 void Slave::handleEnjoinChargeCommand() {
@@ -122,6 +130,7 @@ void Slave::handleCancelChargeCommand() {
 }
 
 void Slave::onReceiveSingle(uint32_t from, String &message) {
+  Serial.printf("Received single from Node(%u): %s", from, message.c_str());
   if (from == this->master.id) {
     if (message == "enjoinCharge") {
       this->handleEnjoinChargeCommand();

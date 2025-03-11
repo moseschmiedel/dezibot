@@ -10,7 +10,7 @@
 
 class Master : public Dezibot {
 public:
-  Master(AbstractSet<SlaveData> &registered_slaves,
+  Master(AbstractSet<SlaveData, uint32_t> &registered_slaves,
          ChargingStationState state,
          SlaveData *charging_slave,
          const std::function<void(SlaveData &slave)> &handle_slave_charge_request,
@@ -29,7 +29,7 @@ public:
   void cancelCharge(SlaveData &slave);
 
 private:
-  AbstractSet<SlaveData> &registeredSlaves;
+  AbstractSet<SlaveData, uint32_t> &registeredSlaves;
   ChargingStationState chargingStationState;
   SlaveData *chargingSlave;
   const std::function<void(SlaveData &slave)> handleSlaveChargeRequest;
