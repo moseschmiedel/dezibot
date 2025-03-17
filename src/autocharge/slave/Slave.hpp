@@ -19,7 +19,6 @@ public:
         stepWaitCharge(stepWaitCharge), stepIntoCharge(stepIntoCharge),
         stepCharge(stepCharge), stepExitCharge(stepExitCharge) {}
 
-  void begin() override;
   void step();
   void requestCharge();
   void requestStopCharge();
