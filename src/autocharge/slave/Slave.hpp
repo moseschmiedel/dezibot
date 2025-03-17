@@ -17,8 +17,13 @@ public:
         const std::function<bool(MasterData master)> stepExitCharge)
       : state(state), stepWork(stepWork), stepToCharge(stepToCharge),
         stepWaitCharge(stepWaitCharge), stepIntoCharge(stepIntoCharge),
-        stepCharge(stepCharge), stepExitCharge(stepExitCharge) {}
+        stepCharge(stepCharge), stepExitCharge(stepExitCharge) {
+    Slave::slave = this;
+  }
 
+  static Slave *slave;
+
+  void begin() override;
   void step();
   void requestCharge();
   void requestStopCharge();
@@ -43,7 +48,16 @@ private:
   void handleEnjoinChargeCommand();
   void handleCancelChargeCommand();
 
-  void onReceiveSingle(uint32_t from, String &message);
+  static void onReceiveSingle(uint32_t from, String &message) {
+    Serial.printf("Received single from Node(%u): %s", from, message.c_str());
+    if (from == slave->master.id) {
+      if (message == "enjoinCharge") {
+        slave->handleEnjoinChargeCommand();
+      } else if (message == "cancelCharge") {
+        slave->handleCancelChargeCommand();
+      }
+    }
+  }
 };
 
 #endif // SLAVE_H

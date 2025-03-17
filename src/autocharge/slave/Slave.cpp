@@ -1,6 +1,12 @@
 #include "Slave.hpp"
 #include "communication/Communication.h"
 
+void Slave::begin(void) {
+  this->Dezibot::begin();
+  this->communication.begin();
+  this->communication.onReceiveSingle(&onReceiveSingle);
+}
+
 void Slave::step() {
   switch (this->state) {
   case SlaveState::WORK: {
@@ -144,16 +150,5 @@ void Slave::handleCancelChargeCommand() {
   case SlaveState::EXITING_CHARGE: {
     break;
   }
-  }
-}
-
-void Slave::onReceiveSingle(uint32_t from, String &message) {
-  Serial.printf("Received single from Node(%u): %s", from, message.c_str());
-  if (from == this->master.id) {
-    if (message == "enjoinCharge") {
-      this->handleEnjoinChargeCommand();
-    } else if (message == "cancelCharge") {
-      this->handleCancelChargeCommand();
-    }
   }
 }

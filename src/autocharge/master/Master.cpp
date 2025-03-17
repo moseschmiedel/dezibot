@@ -1,6 +1,12 @@
 #include "Master.hpp"
 #include "SlaveData.hpp"
 
+void Master::begin(void) {
+  this->Dezibot::begin();
+  this->communication.begin();
+  this->communication.onReceiveSingle(&onReceiveSingle);
+}
+
 void Master::step() {
   switch (this->chargingStationState) {
   case ChargingStationState::OPEN: {
@@ -85,30 +91,4 @@ void Master::handleInChargeInfo(SlaveData &slave) {
 
 void Master::handleExitChargeInfo(SlaveData &slave) {
   slave.state = SlaveState::EXITING_CHARGE;
-}
-
-void Master::onReceiveSingle(uint32_t from, String &message) {
-  Serial.printf("Received single from Node(%u): %s", from, message.c_str());
-  SlaveData *slave = this->registeredSlaves.get(from);
-  if (slave == nullptr) {
-    return;
-  } else {
-    if (message == "requestCharge") {
-      this->enjoinCharge(*slave);
-    } else if (message == "stopCharge") {
-      this->cancelCharge(*slave);
-    } else if (message == "notifyWork") {
-      slave->state = SlaveState::WORK;
-    } else if (message == "notifyWalkToCharge") {
-      slave->state = SlaveState::WALKING_TO_CHARGE;
-    } else if (message == "notifyWalkInWait") {
-      slave->state = SlaveState::WAIT_CHARGE;
-    } else if (message == "notifyWalkIntoCharge") {
-      slave->state = SlaveState::WALKING_INTO_CHARGE;
-    } else if (message == "notifyInCharge") {
-      slave->state = SlaveState::CHARGE;
-    } else if (message == "notifyExitCharge") {
-      slave->state = SlaveState::EXITING_CHARGE;
-    }
-  }
 }
