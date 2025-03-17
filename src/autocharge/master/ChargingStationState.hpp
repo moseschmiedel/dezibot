@@ -1,3 +1,5 @@
+#pragma once
+
 enum class ChargingStationState {
   OPEN,
   LOWERING_GEAR,

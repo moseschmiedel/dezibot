@@ -1,3 +1,6 @@
+#include <Dezibot.h>
+#include <autocharge/Autocharge.hpp>
+
 void setup() {
   // put your setup code here, to run once:
 

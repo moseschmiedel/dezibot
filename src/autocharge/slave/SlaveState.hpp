@@ -1,3 +1,5 @@
+#pragma once
+
 enum class SlaveState {
   WORK,
   WALKING_TO_CHARGE,
