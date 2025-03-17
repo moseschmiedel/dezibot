@@ -22,7 +22,10 @@ public:
         stepWaitCharge(stepWaitCharge),
         stepIntoCharge(stepIntoCharge),
         stepCharge(stepCharge),
-        stepExitCharge(stepExitCharge) {}
+        stepExitCharge(stepExitCharge) {
+            this->communication.begin();
+            this->communication.onReceiveSingle(&onReceiveSingle);
+        }
 
   void step();
   void requestCharge();
@@ -45,10 +48,10 @@ private:
   void notifyInCharge();
   void notifyExitCharge();
 
-  void handleRequestChargeResponse(bool approved);
   void handleEnjoinChargeCommand();
   void handleCancelChargeCommand();
-  void handleRequestStopChargeResponse(bool approved);
+
+  void onReceiveSingle(uint32_t from, String& message);
 };
 
 #endif // SLAVE_H
