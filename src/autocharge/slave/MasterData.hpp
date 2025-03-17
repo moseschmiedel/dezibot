@@ -1,12 +1,12 @@
 #ifndef MASTERDATA_H
 #define MASTERDATA_H
 
-#include <string>
+#include <cstdint>
 
 struct MasterData {
-  std::string id;
+  uint32_t id;
 
-  MasterData(std::string _id) : id(_id) {}
+  MasterData(uint32_t _id) : id(_id) {}
 };
 
 #endif // MASTERDATA_H

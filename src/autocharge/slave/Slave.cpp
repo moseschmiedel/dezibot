@@ -1,4 +1,5 @@
 #include "Slave.hpp"
+#include "Communication.h"
 
 void Slave::step() {
   switch (this->state) {
@@ -35,21 +36,45 @@ void Slave::step() {
   }
 }
 
-void Slave::requestCharge() {}
+void Slave::requestCharge() {
+  this->communication.unicast(this->master.id, "requestCharge");
+  Serial.printf("Requested master(%u) to charge", this->master.id);
+}
 
-void Slave::requestStopCharge() {}
+void Slave::requestStopCharge() {
+  this->communication.unicast(this->master.id, "stopCharge");
+  Serial.printf("Requested master(%u) to stop charging", this->master.id);
+}
 
-void Slave::notifyWork() {}
+void Slave::notifyWork() {
+  this->communication.unicast(this->master.id, "notifyWork");
+  Serial.printf("Notified master(%u) of work", this->master.id);
+}
 
-void Slave::notifyWalkToCharge() {}
+void Slave::notifyWalkToCharge() {
+  this->communication.unicast(this->master.id, "notifyWalkToCharge");
+  Serial.printf("Notified master(%u) of walk to charge", this->master.id);
+}
 
-void Slave::notifyInWait() {}
+void Slave::notifyInWait() {
+  this->communication.unicast(this->master.id, "notifyInWait");
+  Serial.printf("Notified master(%u) of wait", this->master.id);
+}
 
-void Slave::notifyWalkIntoCharge() {}
+void Slave::notifyWalkIntoCharge() {
+  this->communication.unicast(this->master.id, "notifyWalkIntoCharge");
+  Serial.printf("Notified master(%u) of walk into charge", this->master.id);
+}
 
-void Slave::notifyInCharge() {}
+void Slave::notifyInCharge() {
+  this->communication.unicast(this->master.id, "notifyInCharge");
+  Serial.printf("Notified master(%u) of in charge", this->master.id);
+}
 
-void Slave::notifyExitCharge() {}
+void Slave::notifyExitCharge() {
+  this->communication.unicast(this->master.id, "notifyExitCharge");
+  Serial.printf("Notified master(%u) of exit charge", this->master.id);
+}
 
 void Slave::handleEnjoinChargeCommand() {
   switch (this->state) {
@@ -104,16 +129,13 @@ void Slave::handleCancelChargeCommand() {
   }
 }
 
-void Slave::handleRequestChargeResponse(bool approved) {
-  if (approved) {
-    this->notifyWalkToCharge();
-    this->state = SlaveState::WALKING_TO_CHARGE;
-  }
-}
-
-void Slave::handleRequestStopChargeResponse(bool approved) {
-  if (approved) {
-    this->notifyExitCharge();
-    this->state = SlaveState::EXITING_CHARGE;
+void Slave::onReceiveSingle(uint32_t from, String &message) {
+  Serial.printf("Received single from Node(%u): %s", from, message.c_str());
+  if (from == this->master.id) {
+    if (message == "enjoinCharge") {
+      this->handleEnjoinChargeCommand();
+    } else if (message == "cancelCharge") {
+      this->handleCancelChargeCommand();
+    }
   }
 }
