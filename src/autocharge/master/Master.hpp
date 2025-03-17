@@ -1,14 +1,12 @@
 #pragma once
+
 #include "../../Dezibot.h"
 #include "ChargingStationState.hpp"
 #include "SlaveData.hpp"
 #include "abstractSet/AbstractSet.hpp"
 #include <functional>
 
-#ifndef MASTER_H
-#define MASTER_H
-
-class Master : public Dezibot {
+class Master : Dezibot {
 public:
   Master(
       AbstractSet<SlaveData, uint32_t> &registered_slaves,
@@ -76,5 +74,3 @@ private:
     }
   }
 };
-
-#endif // MASTER_H

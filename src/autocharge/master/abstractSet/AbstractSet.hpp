@@ -1,5 +1,4 @@
-#ifndef ABSTRACTSET_H
-#define ABSTRACTSET_H
+#pragma once
 
 template <typename T, typename ID> class AbstractSet {
 public:
@@ -9,5 +8,3 @@ public:
   virtual bool isEmpty() const = 0;
   virtual ~AbstractSet() = default;
 };
-
-#endif // ABSTRACTSET_H

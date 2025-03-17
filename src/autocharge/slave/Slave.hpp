@@ -1,13 +1,11 @@
 #pragma once
+
 #include "../../Dezibot.h"
 #include "MasterData.hpp"
 #include "SlaveState.hpp"
 #include <functional>
 
-#ifndef SLAVE_H
-#define SLAVE_H
-
-class Slave : public Dezibot {
+class Slave : Dezibot {
 public:
   Slave(SlaveState state, const std::function<void()> stepWork,
         const std::function<bool(MasterData master)> stepToCharge,
@@ -59,5 +57,3 @@ private:
     }
   }
 };
-
-#endif // SLAVE_H
