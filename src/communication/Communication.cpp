@@ -5,7 +5,8 @@ painlessMesh mesh;
 uint32_t Communication::groupNumber = 0;
 
 // User-defined callback function pointer
-void (*Communication::userCallback)(uint32_t from, String &msg) = nullptr;
+void (*Communication::userCallbackSingle)(uint32_t from, String &msg) = nullptr;
+void (*Communication::userCallbackGroup)(uint32_t from, String &msg) = nullptr;
 
 void Communication::broadcast(String msg)
 {
