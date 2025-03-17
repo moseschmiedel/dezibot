@@ -45,12 +45,12 @@ void Master::step() {
 
 void Master::enjoinCharge(SlaveData &slave) {
   this->communication.unicast(slave.id, "enjoinCharge");
-  Serial.println("Commanded slave(%u) to charge", slave.id);
+  Serial.printf("Commanded slave(%u) to charge\n", slave.id);
 }
 
 void Master::cancelCharge(SlaveData &slave) {
   this->communication.unicast(slave.id, "cancelCharge");
-  Serial.println("Commanded slave(%u) to cancel charge", slave.id);
+  Serial.printf("Commanded slave(%u) to cancel charge\n", slave.id);
 }
 
 bool Master::stepLowerGear() {}
