@@ -1,9 +1,18 @@
 #include <Dezibot.h>
 #include <autocharge/Autocharge.hpp>
 
-void setup() {
-  // put your setup code here, to run once:
+void start_chg(SlaveData &slave) {}
+void end_chg(SlaveData &slave) {}
 
+auto chargingSlaves = Fifo<SlaveData*>();
+
+Master m = Master(chargingSlaves,
+  start_chg,
+  end_chg);
+
+void setup() {
+
+  m.begin();
 }
 
 void loop() {
