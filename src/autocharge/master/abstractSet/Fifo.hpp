@@ -2,20 +2,15 @@
 
 #include "AbstractSet.hpp"
 #include <queue>
-#include <unordered_map>
 
-template <typename T, typename ID>
-class Fifo final : public AbstractSet<T, ID> {
+template <typename T>
+class Fifo final : public AbstractSet<T> {
 private:
   std::queue<T> queue;
-  std::unordered_map<ID, T *> idMap;
 
 public:
-  void insert(ID id, T &item) override {
-    if (idMap.find(id) == idMap.end()) {
+  void insert(T &item) override {
       queue.push(item);
-      idMap[id] = &queue.back();
-    }
   }
 
   T *pick() override {
@@ -24,15 +19,8 @@ public:
     }
     T &item = queue.front();
     queue.pop();
-    idMap.erase(item.getId());
-    return &item;
-  }
 
-  T *get(ID id) override {
-    if (idMap.find(id) != idMap.end()) {
-      return idMap[id];
-    }
-    return nullptr;
+    return &item;
   }
 
   bool isEmpty() const override { return queue.empty(); }
