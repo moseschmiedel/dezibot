@@ -25,17 +25,7 @@ public:
   void enjoinCharge(SlaveData &slave);
   void cancelCharge(SlaveData &slave);
 
-  static Master *getInstance();
-
   protected:
-    Master(Master *master)
-   : chargingSlaves(master->chargingSlaves),
-    registeredSlaves(master->registeredSlaves),
-    chargingStationState(master->chargingStationState),
-    currentChargingSlave(master->currentChargingSlave),
-    handleSlaveChargeRequest(master->handleSlaveChargeRequest),
-    handleSlaveStopChargeRequest(master->handleSlaveStopChargeRequest)
-    {}
 
     static Master *master;
 private:
