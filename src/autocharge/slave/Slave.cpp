@@ -12,7 +12,7 @@ void Slave::begin(void) {
 void Slave::step() {
   switch (this->state) {
   case SlaveState::WORK: {
-    this->stepWork();
+    this->stepWork(this);
     break;
   }
   case SlaveState::WALKING_TO_CHARGE: {

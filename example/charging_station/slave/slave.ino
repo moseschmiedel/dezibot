@@ -1,10 +1,11 @@
 #include <Dezibot.h>
 #include <autocharge/Autocharge.hpp>
 
-auto master = MasterData(1);
+auto master = MasterData(4200495932);
 
-void step_work() {
+void step_work(Slave *slave) {
     Serial.printf("Execute 'step_work'\n");
+    slave->requestCharge();
 }
 
 bool step_to_charge(MasterData &master) {
