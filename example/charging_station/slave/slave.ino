@@ -5,7 +5,7 @@ auto master = MasterData(4200495932);
 
 void step_work(Slave *slave) {
     Serial.printf("Execute 'step_work'\n");
-    slave.requestCharge();
+    slave->requestCharge();
 }
 
 bool step_to_charge(MasterData &master) {
