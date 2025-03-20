@@ -1,6 +1,8 @@
 #include "Master.hpp"
 #include "SlaveData.hpp"
 
+Master *Master::master = nullptr;
+
 void Master::begin(void) {
   this->Dezibot::begin();
   this->communication.begin();
@@ -51,12 +53,12 @@ void Master::step() {
 }
 
 void Master::enjoinCharge(SlaveData &slave) {
-  this->communication.unicast(slave.id, "enjoinCharge");
+  // this->communication.unicast(slave.id, "enjoinCharge");
   Serial.printf("Commanded slave(%u) to charge\n", slave.id);
 }
 
 void Master::cancelCharge(SlaveData &slave) {
-  this->communication.unicast(slave.id, "cancelCharge");
+  // this->communication.unicast(slave.id, "cancelCharge");
   Serial.printf("Commanded slave(%u) to cancel charge\n", slave.id);
 }
 
