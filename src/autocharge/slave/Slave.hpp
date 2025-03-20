@@ -7,16 +7,15 @@
 
 class Slave : Dezibot {
 public:
-  Slave(SlaveState state, const std::function<void()> stepWork,
-        const std::function<bool(MasterData master)> stepToCharge,
-        const std::function<void(MasterData master)> stepWaitCharge,
-        const std::function<bool(MasterData master)> stepIntoCharge,
-        const std::function<void(MasterData master)> stepCharge,
-        const std::function<bool(MasterData master)> stepExitCharge)
-      : state(state), stepWork(stepWork), stepToCharge(stepToCharge),
+  Slave(SlaveState state, MasterData &master, const std::function<void()> stepWork,
+        const std::function<bool(MasterData &master)> stepToCharge,
+        const std::function<void(MasterData &master)> stepWaitCharge,
+        const std::function<bool(MasterData &master)> stepIntoCharge,
+        const std::function<void(MasterData &master)> stepCharge,
+        const std::function<bool(MasterData &master)> stepExitCharge)
+      : state(state), master(master), stepWork(stepWork), stepToCharge(stepToCharge),
         stepWaitCharge(stepWaitCharge), stepIntoCharge(stepIntoCharge),
         stepCharge(stepCharge), stepExitCharge(stepExitCharge) {
-    Slave::slave = this;
   }
 
   static Slave *slave;
@@ -28,13 +27,13 @@ public:
 
 private:
   SlaveState state;
-  MasterData master;
+  MasterData &master;
   const std::function<void()> stepWork;
-  const std::function<bool(MasterData master)> stepToCharge;
-  const std::function<void(MasterData master)> stepWaitCharge;
-  const std::function<bool(MasterData master)> stepIntoCharge;
-  const std::function<void(MasterData master)> stepCharge;
-  const std::function<bool(MasterData master)> stepExitCharge;
+  const std::function<bool(MasterData &master)> stepToCharge;
+  const std::function<void(MasterData &master)> stepWaitCharge;
+  const std::function<bool(MasterData &master)> stepIntoCharge;
+  const std::function<void(MasterData &master)> stepCharge;
+  const std::function<bool(MasterData &master)> stepExitCharge;
 
   void notifyWork();
   void notifyWalkToCharge();

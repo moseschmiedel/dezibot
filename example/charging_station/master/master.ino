@@ -1,18 +1,22 @@
 #include <Dezibot.h>
 #include <autocharge/Autocharge.hpp>
 
-void start_chg(SlaveData &slave) {}
-void end_chg(SlaveData &slave) {}
+void start_chg(SlaveData &slave) {
+    Serial.printf("Execute 'start_chg for slave %u'", slave.id);
+}
+void end_chg(SlaveData &slave) {
+    Serial.printf("Execute 'end_chg for slave %u'", slave.id);
+}
 
 auto chargingSlaves = Fifo<SlaveData*>();
 
-Master m = Master(chargingSlaves,
+Master master = Master(chargingSlaves,
   start_chg,
   end_chg);
 
 void setup() {
 
-  m.begin();
+  master.begin();
 }
 
 void loop() {

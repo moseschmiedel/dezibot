@@ -1,10 +1,13 @@
 #include "Slave.hpp"
 #include "communication/Communication.h"
 
+Slave *Slave::slave = nullptr;
+
 void Slave::begin(void) {
   this->Dezibot::begin();
   this->communication.begin();
   this->communication.onReceiveSingle(&onReceiveSingle);
+  slave = this;
 }
 
 void Slave::step() {
