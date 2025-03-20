@@ -7,7 +7,6 @@ void Master::begin(void) {
   this->Dezibot::begin();
   this->communication.begin();
   this->communication.onReceiveSingle(&onReceiveSingle);
-  master = this;
 }
 
 void Master::step() {

@@ -7,7 +7,6 @@ void Slave::begin(void) {
   this->Dezibot::begin();
   this->communication.begin();
   this->communication.onReceiveSingle(&onReceiveSingle);
-  slave = this;
 }
 
 void Slave::step() {
