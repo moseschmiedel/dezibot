@@ -53,12 +53,12 @@ void Master::step() {
 }
 
 void Master::enjoinCharge(SlaveData &slave) {
-  // this->communication.unicast(slave.id, "enjoinCharge");
+  this->communication.unicast(slave.id, "enjoinCharge");
   Serial.printf("Commanded slave(%u) to charge\n", slave.id);
 }
 
 void Master::cancelCharge(SlaveData &slave) {
-  // this->communication.unicast(slave.id, "cancelCharge");
+  this->communication.unicast(slave.id, "cancelCharge");
   Serial.printf("Commanded slave(%u) to cancel charge\n", slave.id);
 }
 
