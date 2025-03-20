@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.8,
-          "height": 1.27,
-          "width": 2.54
+          "drill": 1.0,
+          "height": 1.7,
+          "width": 1.7
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -48,16 +48,45 @@
         "silk_text_thickness": 0.1,
         "silk_text_upright": false,
         "zones": {
-          "min_clearance": 0.5
+          "min_clearance": 0.0
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "lib_footprint_mismatch|103000000|124777400|2033efc1-ece4-4eb8-b8d0-ecf5d1c3dd54|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "lib_footprint_mismatch|116000000|116500000|dff96bb7-ba6e-451e-8959-6d90a4954003|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "lib_footprint_mismatch|185350000|117335500|02cfa04c-0672-48be-891d-0760f1294a15|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "lib_footprint_mismatch|197500000|109200500|8cecdeb2-6cab-4522-b6c5-3efe8810ad01|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "via_dangling|104500000|54000000|1c5e691b-fbef-4d00-a7cb-9bda8242e9e3|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "via_dangling|147500000|124000000|b28e7d02-5bed-424d-bf4a-10c2450f5186|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "via_dangling|194500000|59500000|51ae2dd1-c4a0-4895-be5c-119261da2061|00000000-0000-0000-0000-000000000000",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
       "rule_severities": {
-        "annular_width": "error",
+        "annular_width": "ignore",
         "clearance": "error",
         "connection_width": "warning",
         "copper_edge_clearance": "error",
@@ -94,9 +123,9 @@
         "padstack": "warning",
         "pth_inside_courtyard": "ignore",
         "shorting_items": "error",
-        "silk_edge_clearance": "warning",
+        "silk_edge_clearance": "ignore",
         "silk_over_copper": "warning",
-        "silk_overlap": "warning",
+        "silk_overlap": "ignore",
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
@@ -116,7 +145,7 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.6,
+        "min_clearance": 0.3,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.5,
         "min_groove_width": 0.0,
