@@ -7,15 +7,18 @@
 
 class Slave : Dezibot {
 public:
-  Slave(SlaveState state, MasterData &master, const std::function<void()> stepWork,
+  Slave(SlaveState state, MasterData &master,
+        const std::function<void()> stepWork,
         const std::function<bool(MasterData &master)> stepToCharge,
         const std::function<void(MasterData &master)> stepWaitCharge,
         const std::function<bool(MasterData &master)> stepIntoCharge,
         const std::function<void(MasterData &master)> stepCharge,
         const std::function<bool(MasterData &master)> stepExitCharge)
-      : state(state), master(master), stepWork(stepWork), stepToCharge(stepToCharge),
-        stepWaitCharge(stepWaitCharge), stepIntoCharge(stepIntoCharge),
-        stepCharge(stepCharge), stepExitCharge(stepExitCharge) {
+      : state(state), master(master), stepWork(stepWork),
+        stepToCharge(stepToCharge), stepWaitCharge(stepWaitCharge),
+        stepIntoCharge(stepIntoCharge), stepCharge(stepCharge),
+        stepExitCharge(stepExitCharge) {
+    slave = this;
   }
 
   static Slave *slave;
