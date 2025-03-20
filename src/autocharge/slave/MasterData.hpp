@@ -5,6 +5,8 @@
 
 struct MasterData {
   uint32_t id;
+
+  MasterData(uint32_t id) : id(id) {}
 };
 
 #endif // MASTERDATA_H
