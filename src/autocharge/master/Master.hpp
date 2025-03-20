@@ -5,33 +5,45 @@
 #include "SlaveData.hpp"
 #include "abstractSet/AbstractSet.hpp"
 #include <functional>
+#include <unordered_map>
 
 class Master : Dezibot {
 public:
   Master(
-      AbstractSet<SlaveData> &registered_slaves,
-      ChargingStationState state, SlaveData *charging_slave,
+      AbstractSet<SlaveData *> &chargingSlaves,
       const std::function<void(SlaveData &slave)> &handle_slave_charge_request,
       const std::function<void(SlaveData &slave)>
           &handle_slave_stop_charge_request)
-      : registeredSlaves(registered_slaves), chargingStationState(state),
-        chargingSlave(charging_slave),
+      : chargingSlaves(chargingSlaves),
         handleSlaveChargeRequest(handle_slave_charge_request),
         handleSlaveStopChargeRequest(handle_slave_stop_charge_request) {
-    Master::master = this;
   }
 
-  static Master *master;
 
   void begin() override;
   void step();
   void enjoinCharge(SlaveData &slave);
   void cancelCharge(SlaveData &slave);
 
+  static Master *getInstance();
+
+  protected:
+    Master(Master *master)
+   : chargingSlaves(master->chargingSlaves),
+    registeredSlaves(master->registeredSlaves),
+    chargingStationState(master->chargingStationState),
+    currentChargingSlave(master->currentChargingSlave),
+    handleSlaveChargeRequest(master->handleSlaveChargeRequest),
+    handleSlaveStopChargeRequest(master->handleSlaveStopChargeRequest)
+    {}
+
+    static Master *master;
 private:
-  AbstractSet<SlaveData> &registeredSlaves;
-  ChargingStationState chargingStationState;
-  SlaveData *chargingSlave;
+  std::unordered_map<uint32_t, SlaveData *> *registeredSlaves =
+      new std::unordered_map<uint32_t, SlaveData*>();
+  AbstractSet<SlaveData *> &chargingSlaves;
+  ChargingStationState chargingStationState = ChargingStationState::OPEN;
+  SlaveData *currentChargingSlave = nullptr;
   const std::function<void(SlaveData &slave)> handleSlaveChargeRequest;
   const std::function<void(SlaveData &slave)> handleSlaveStopChargeRequest;
 
@@ -49,11 +61,13 @@ private:
   void handleExitChargeInfo(SlaveData &slave);
 
   static void onReceiveSingle(uint32_t from, String &message) {
-    Serial.printf("Received single from Node(%u): %s", from, message.c_str());
-    SlaveData *slave = master->registeredSlaves.get(from);
-    if (slave == nullptr) {
-      return;
-    } else {
+      Serial.printf("Received single from Node(%u): %s", from, message.c_str());
+      SlaveData *slave = master->registeredSlaves->at(from);
+      if (slave == nullptr) {
+        slave = new SlaveData(from);
+        master->registeredSlaves->insert({from, slave});
+      }
+
       if (message == "requestCharge") {
         master->enjoinCharge(*slave);
       } else if (message == "stopCharge") {
@@ -71,6 +85,5 @@ private:
       } else if (message == "notifyExitCharge") {
         slave->state = SlaveState::EXITING_CHARGE;
       }
-    }
   }
 };
