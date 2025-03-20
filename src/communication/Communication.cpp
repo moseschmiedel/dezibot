@@ -14,7 +14,7 @@ void Communication::broadcast(String msg)
     mesh.sendBroadcast(data);
 }
 
-void unicast(uint32_t targetId, String msg)
+void Communication::unicast(uint32_t targetId, String msg)
 {
     mesh.sendSingle(targetId, msg);
 }
