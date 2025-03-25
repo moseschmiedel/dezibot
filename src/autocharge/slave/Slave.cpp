@@ -16,7 +16,7 @@ void Slave::step() {
     break;
   }
   case SlaveState::WALKING_TO_CHARGE: {
-    const bool arrived = this->stepToCharge(this->master);
+    const bool arrived = this->stepToCharge(this, this->master);
     if (arrived) {
       this->notifyInWait();
       this->state = SlaveState::WAIT_CHARGE;
@@ -24,11 +24,11 @@ void Slave::step() {
     break;
   }
   case SlaveState::WAIT_CHARGE: {
-    this->stepWaitCharge(this->master);
+    this->stepWaitCharge(this, this->master);
     break;
   }
   case SlaveState::WALKING_INTO_CHARGE: {
-    const bool entered = this->stepIntoCharge(this->master);
+    const bool entered = this->stepIntoCharge(this, this->master);
     if (entered) {
       this->notifyInCharge();
       this->state = SlaveState::CHARGE;
@@ -36,11 +36,11 @@ void Slave::step() {
     break;
   }
   case SlaveState::CHARGE: {
-    this->stepCharge(this->master);
+    this->stepCharge(this, this->master);
     break;
   }
   case SlaveState::EXITING_CHARGE: {
-    const bool exited = this->stepExitCharge(this->master);
+    const bool exited = this->stepExitCharge(this, this->master);
     if (exited) {
       this->notifyWork();
       this->state = SlaveState::WORK;

@@ -9,11 +9,11 @@ class Slave : Dezibot {
 public:
   Slave(SlaveState state, MasterData &master,
         const std::function<void(Slave *slave)> stepWork,
-        const std::function<bool(MasterData &master)> stepToCharge,
-        const std::function<void(MasterData &master)> stepWaitCharge,
-        const std::function<bool(MasterData &master)> stepIntoCharge,
-        const std::function<void(MasterData &master)> stepCharge,
-        const std::function<bool(MasterData &master)> stepExitCharge)
+        const std::function<bool(Slave *slave, MasterData &master)> stepToCharge,
+        const std::function<void(Slave *slave, MasterData &master)> stepWaitCharge,
+        const std::function<bool(Slave *slave, MasterData &master)> stepIntoCharge,
+        const std::function<void(Slave *slave, MasterData &master)> stepCharge,
+        const std::function<bool(Slave *slave, MasterData &master)> stepExitCharge)
       : state(state), master(master), stepWork(stepWork),
         stepToCharge(stepToCharge), stepWaitCharge(stepWaitCharge),
         stepIntoCharge(stepIntoCharge), stepCharge(stepCharge),
@@ -32,11 +32,11 @@ private:
   SlaveState state;
   MasterData &master;
   const std::function<void(Slave *slave)> stepWork;
-  const std::function<bool(MasterData &master)> stepToCharge;
-  const std::function<void(MasterData &master)> stepWaitCharge;
-  const std::function<bool(MasterData &master)> stepIntoCharge;
-  const std::function<void(MasterData &master)> stepCharge;
-  const std::function<bool(MasterData &master)> stepExitCharge;
+  const std::function<bool(Slave *slave, MasterData &master)> stepToCharge;
+  const std::function<void(Slave *slave, MasterData &master)> stepWaitCharge;
+  const std::function<bool(Slave *slave, MasterData &master)> stepIntoCharge;
+  const std::function<void(Slave *slave, MasterData &master)> stepCharge;
+  const std::function<bool(Slave *slave, MasterData &master)> stepExitCharge;
 
   void notifyWork();
   void notifyWalkToCharge();
