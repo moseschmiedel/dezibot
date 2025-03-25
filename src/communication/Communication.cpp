@@ -81,6 +81,11 @@ void Communication::onReceiveSingle(void (*callbackFunc)(uint32_t from, String &
     userCallbackSingle = callbackFunc;
 }
 
+uint32_t Communication::getNodeId()
+{
+    return mesh.getNodeId();
+}
+
 void Communication::begin(void)
 {
     Serial.begin(115200);
