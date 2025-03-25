@@ -7,7 +7,7 @@
 #include <functional>
 #include <unordered_map>
 
-class Master : Dezibot {
+class Master : public Dezibot {
 public:
   Master(
       AbstractSet<SlaveData *> &chargingSlaves,
