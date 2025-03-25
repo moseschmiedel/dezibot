@@ -50,7 +50,7 @@ private:
   void handleExitChargeInfo(SlaveData &slave);
 
   static void onReceiveSingle(uint32_t from, String &message) {
-    Serial.printf("Received single from Node(%u): %s", from, message.c_str());
+    Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
     SlaveData *slave = master->registeredSlaves->at(from);
     if (slave == nullptr) {
       slave = new SlaveData(from);
