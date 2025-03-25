@@ -5,7 +5,7 @@
 #include "SlaveState.hpp"
 #include <functional>
 
-class Slave : Dezibot {
+class Slave : public Dezibot {
 public:
   Slave(SlaveState state, MasterData &master,
         const std::function<void(Slave *slave)> stepWork,
