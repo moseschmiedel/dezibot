@@ -28,6 +28,8 @@ public:
 
     void onReceiveSingle(void (*callbackFunc)(uint32_t from, String &msg));
 
+    uint32_t getNodeId();
+
 private:
     static void (*userCallbackSingle)(uint32_t from, String &msg);
     static void (*userCallbackGroup)(uint32_t from, String &msg);
