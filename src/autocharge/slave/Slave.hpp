@@ -49,7 +49,7 @@ private:
   void handleCancelChargeCommand();
 
   static void onReceiveSingle(uint32_t from, String &message) {
-    Serial.printf("Received single from Node(%u): %s", from, message.c_str());
+      Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
     if (from == slave->master.id) {
       if (message == "enjoinCharge") {
         slave->handleEnjoinChargeCommand();
