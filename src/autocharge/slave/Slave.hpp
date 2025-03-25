@@ -51,9 +51,9 @@ private:
   static void onReceiveSingle(uint32_t from, String &message) {
       Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
     if (from == slave->master.id) {
-      if (message == "enjoinCharge") {
+      if (message.equals("enjoinCharge")) {
         slave->handleEnjoinChargeCommand();
-      } else if (message == "cancelCharge") {
+      } else if (message.equals("cancelCharge")) {
         slave->handleCancelChargeCommand();
       }
     }
