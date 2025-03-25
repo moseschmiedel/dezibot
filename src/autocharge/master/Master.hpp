@@ -51,11 +51,14 @@ private:
 
   static void onReceiveSingle(uint32_t from, String &message) {
     Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
-    SlaveData *slave = master->registeredSlaves->at(from);
-    if (slave == nullptr) {
-      slave = new SlaveData(from);
-      master->registeredSlaves->insert({from, slave});
-    }
+    // TODO @moseschmiedel
+    // SlaveData *slave = master->registeredSlaves->at(from);
+    // if (slave == nullptr) {
+    //   slave = new SlaveData(from);
+    //   master->registeredSlaves->insert({from, slave});
+    // }
+    //
+    SlaveData *slave = new SlaveData(4200495964, SlaveState::WORK);
 
     if (message.equals("requestCharge")) {
       master->handleSlaveChargeRequest(master, *slave);
@@ -73,6 +76,8 @@ private:
       slave->state = SlaveState::CHARGE;
     } else if (message.equals("notifyExitCharge")) {
       slave->state = SlaveState::EXITING_CHARGE;
+    } else {
+        Serial.printf("Unknown message from Node(%u): %s\n", from, message.c_str());
     }
   }
 };
