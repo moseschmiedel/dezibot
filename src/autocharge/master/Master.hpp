@@ -57,21 +57,21 @@ private:
       master->registeredSlaves->insert({from, slave});
     }
 
-    if (message == "requestCharge") {
+    if (message.equals("requestCharge")) {
       master->handleSlaveChargeRequest(master, *slave);
-    } else if (message == "stopCharge") {
+    } else if (message.equals("stopCharge")) {
       master->handleSlaveStopChargeRequest(master, *slave);
-    } else if (message == "notifyWork") {
+    } else if (message.equals("notifyWork")) {
       slave->state = SlaveState::WORK;
-    } else if (message == "notifyWalkToCharge") {
+    } else if (message.equals("notifyWalkToCharge")) {
       slave->state = SlaveState::WALKING_TO_CHARGE;
-    } else if (message == "notifyWalkInWait") {
+    } else if (message.equals("notifyWalkInWait")) {
       slave->state = SlaveState::WAIT_CHARGE;
-    } else if (message == "notifyWalkIntoCharge") {
+    } else if (message.equals("notifyWalkIntoCharge")) {
       slave->state = SlaveState::WALKING_INTO_CHARGE;
-    } else if (message == "notifyInCharge") {
+    } else if (message.equals("notifyInCharge")) {
       slave->state = SlaveState::CHARGE;
-    } else if (message == "notifyExitCharge") {
+    } else if (message.equals("notifyExitCharge")) {
       slave->state = SlaveState::EXITING_CHARGE;
     }
   }
