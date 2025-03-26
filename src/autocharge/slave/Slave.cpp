@@ -93,13 +93,12 @@ void Slave::notifyExitCharge() {
 void Slave::handleEnjoinChargeCommand() {
   switch (this->state) {
   case SlaveState::WORK: {
-    this->notifyWalkIntoCharge();
-    this->state = SlaveState::WALKING_INTO_CHARGE;
+    this->notifyWalkToCharge();
+    this->state = SlaveState::WALKING_TO_CHARGE;
     break;
   }
   case SlaveState::WALKING_TO_CHARGE: {
-    this->notifyWalkIntoCharge();
-    this->state = SlaveState::WALKING_INTO_CHARGE;
+    this->notifyWalkToCharge();
     break;
   }
   case SlaveState::WAIT_CHARGE: {
