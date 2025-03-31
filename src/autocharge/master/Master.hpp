@@ -42,12 +42,12 @@ private:
   bool stepAttachGear();
   void stepSlaveCharge();
 
-  void handleWorkInfo(SlaveData &slave);
-  void handleWalkToChargeInfo(SlaveData &slave);
-  void handleInWaitInfo(SlaveData &slave);
-  void handleWalkIntoChargeInfo(SlaveData &slave);
-  void handleInChargeInfo(SlaveData &slave);
-  void handleExitChargeInfo(SlaveData &slave);
+  void handleWorkInfo(SlaveData *slave);
+  void handleWalkToChargeInfo(SlaveData *slave);
+  void handleInWaitInfo(SlaveData *slave);
+  void handleWalkIntoChargeInfo(SlaveData *slave);
+  void handleInChargeInfo(SlaveData *slave);
+  void handleExitChargeInfo(SlaveData *slave);
 
   static void onReceiveSingle(uint32_t from, String &message) {
     Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
@@ -66,17 +66,17 @@ private:
     } else if (message.equals("stopCharge")) {
       master->handleSlaveStopChargeRequest(master, *slave);
     } else if (message.equals("notifyWork")) {
-      slave->state = SlaveState::WORK;
+      master->handleWorkInfo(slave);
     } else if (message.equals("notifyWalkToCharge")) {
-      slave->state = SlaveState::WALKING_TO_CHARGE;
-    } else if (message.equals("notifyWalkInWait")) {
-      slave->state = SlaveState::WAIT_CHARGE;
+        master->handleWalkToChargeInfo(slave);
+    } else if (message.equals("notifyInWait")) {
+      master->handleInWaitInfo(slave);
     } else if (message.equals("notifyWalkIntoCharge")) {
-      slave->state = SlaveState::WALKING_INTO_CHARGE;
+      master->handleWalkIntoChargeInfo(slave);
     } else if (message.equals("notifyInCharge")) {
-      slave->state = SlaveState::CHARGE;
+      master->handleInChargeInfo(slave);
     } else if (message.equals("notifyExitCharge")) {
-      slave->state = SlaveState::EXITING_CHARGE;
+      master->handleExitChargeInfo(slave);
     } else {
         Serial.printf("Unknown message from Node(%u): %s\n", from, message.c_str());
     }
