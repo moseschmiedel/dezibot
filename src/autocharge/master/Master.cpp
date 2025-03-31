@@ -120,5 +120,6 @@ void Master::handleInChargeInfo(SlaveData *slave) {
 
 void Master::handleExitChargeInfo(SlaveData *slave) {
   slave->state = SlaveState::EXITING_CHARGE;
+  this->currentChargingSlave = nullptr;
   this->chargingStationState = ChargingStationState::OPEN;
 }
