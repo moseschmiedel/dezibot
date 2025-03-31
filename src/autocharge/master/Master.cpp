@@ -12,13 +12,7 @@ void Master::begin(void) {
 void Master::step() {
   switch (this->chargingStationState) {
   case ChargingStationState::OPEN: {
-    if (this->currentChargingSlave == nullptr && !this->chargingSlaves.isEmpty()) {
-      SlaveData *next = this->chargingSlaves.pick();
-      if (next != nullptr) {
-        this->currentChargingSlave = next;
-        this->enjoinCharge(*next);
-      }
-    }
+    stepOpen();
     break;
   }
   case ChargingStationState::LOWERING_GEAR: {
@@ -45,45 +39,61 @@ void Master::step() {
     const bool lifted = this->stepLiftGear();
     if (lifted) {
       this->chargingStationState = ChargingStationState::OPEN;
+      this->handleSlaveStopChargeRequest(master, this->currentChargingSlave);
     }
     break;
   }
   }
 }
 
-void Master::enjoinCharge(SlaveData &slave) {
-  this->communication.unicast(slave.id, "enjoinCharge");
-  Serial.printf("Commanded slave(%u) to charge\n", slave.id);
+void Master::enjoinCharge(SlaveData *slave) {
+  this->communication.unicast(slave->id, "enjoinCharge");
+  Serial.printf("Commanded slave(%u) to charge\n", slave->id);
 }
 
-void Master::cancelCharge(SlaveData &slave) {
-  this->communication.unicast(slave.id, "cancelCharge");
-  Serial.printf("Commanded slave(%u) to cancel charge\n", slave.id);
+void Master::cancelCharge(SlaveData *slave) {
+  this->communication.unicast(slave->id, "cancelCharge");
+  Serial.printf("Commanded slave(%u) to cancel charge\n", slave->id);
+}
+
+void Master::stepOpen() {
+  this->multiColorLight.setTopLeds(GREEN);
+  if (!this->chargingSlaves.isEmpty()) {
+    this->chargingStationState = ChargingStationState::LOWERING_GEAR;
+  }
 }
 
 bool Master::stepLowerGear() {
-    this->multiColorLight.blink(5, YELLOW, TOP, 1000);
-    return true;
+  this->multiColorLight.blink(5, YELLOW, TOP, 1000);
+  return true;
 }
 
 bool Master::stepLiftGear() {
-    this->multiColorLight.blink(5, RED, TOP, 1000);
-    return true;
+  this->multiColorLight.blink(5, GREEN, TOP, 1000);
+  return true;
 }
 
 void Master::stepClosed() {
-    this->multiColorLight.setTopLeds(YELLOW);
-    delay(5000);
+  this->multiColorLight.setTopLeds(YELLOW);
+  if (this->currentChargingSlave == nullptr &&
+      !this->chargingSlaves.isEmpty()) {
+    SlaveData *next = this->chargingSlaves.pick();
+    if (next != nullptr) {
+      this->currentChargingSlave = next;
+      this->enjoinCharge(next);
+    }
+  }
+  delay(5000);
 }
 
 bool Master::stepAttachGear() {
-    this->multiColorLight.blink(5, GREEN, TOP, 1000);
-    return true;
+  this->multiColorLight.blink(5, RED, TOP, 1000);
+  return true;
 }
 
 void Master::stepSlaveCharge() {
-    this->multiColorLight.setTopLeds(GREEN);
-    delay(5000);
+  this->multiColorLight.setTopLeds(RED);
+  delay(5000);
 }
 
 void Master::handleWorkInfo(SlaveData *slave) {
@@ -105,8 +115,10 @@ void Master::handleWalkIntoChargeInfo(SlaveData *slave) {
 
 void Master::handleInChargeInfo(SlaveData *slave) {
   slave->state = SlaveState::CHARGE;
+  this->chargingStationState = ChargingStationState::ATTACHING_GEAR;
 }
 
 void Master::handleExitChargeInfo(SlaveData *slave) {
   slave->state = SlaveState::EXITING_CHARGE;
+  this->chargingStationState = ChargingStationState::OPEN;
 }
