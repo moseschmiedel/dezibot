@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AbstractSet.hpp"
+#include <cassert>
 #include <queue>
 
 template <typename T>
@@ -13,14 +14,14 @@ public:
       queue.push(item);
   }
 
-  T *pick() override {
+  T pick() override {
     if (queue.empty()) {
-      return nullptr;
+      assert("Fifo was empty, you should have checked isEmpty() before calling pick()!!!!");
     }
-    T &item = queue.front();
+    T item = queue.front();
     queue.pop();
 
-    return &item;
+    return item;
   }
 
   bool isEmpty() const override { return queue.empty(); }

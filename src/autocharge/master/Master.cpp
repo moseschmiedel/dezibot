@@ -12,8 +12,8 @@ void Master::begin(void) {
 void Master::step() {
   switch (this->chargingStationState) {
   case ChargingStationState::OPEN: {
-    if (this->currentChargingSlave == nullptr) {
-      SlaveData *next = *this->chargingSlaves.pick();
+    if (this->currentChargingSlave == nullptr && !this->chargingSlaves.isEmpty()) {
+      SlaveData *next = this->chargingSlaves.pick();
       if (next != nullptr) {
         this->currentChargingSlave = next;
         this->enjoinCharge(*next);
@@ -86,26 +86,27 @@ void Master::stepSlaveCharge() {
     delay(5000);
 }
 
-void Master::handleWorkInfo(SlaveData &slave) {
-  slave.state = SlaveState::WORK;
+void Master::handleWorkInfo(SlaveData *slave) {
+  slave->state = SlaveState::WORK;
 }
 
-void Master::handleWalkToChargeInfo(SlaveData &slave) {
-  slave.state = SlaveState::WALKING_TO_CHARGE;
+void Master::handleWalkToChargeInfo(SlaveData *slave) {
+  slave->state = SlaveState::WALKING_TO_CHARGE;
 }
 
-void Master::handleInWaitInfo(SlaveData &slave) {
-  slave.state = SlaveState::WAIT_CHARGE;
+void Master::handleInWaitInfo(SlaveData *slave) {
+  slave->state = SlaveState::WAIT_CHARGE;
+  this->chargingSlaves.insert(slave);
 }
 
-void Master::handleWalkIntoChargeInfo(SlaveData &slave) {
-  slave.state = SlaveState::WALKING_INTO_CHARGE;
+void Master::handleWalkIntoChargeInfo(SlaveData *slave) {
+  slave->state = SlaveState::WALKING_INTO_CHARGE;
 }
 
-void Master::handleInChargeInfo(SlaveData &slave) {
-  slave.state = SlaveState::CHARGE;
+void Master::handleInChargeInfo(SlaveData *slave) {
+  slave->state = SlaveState::CHARGE;
 }
 
-void Master::handleExitChargeInfo(SlaveData &slave) {
-  slave.state = SlaveState::EXITING_CHARGE;
+void Master::handleExitChargeInfo(SlaveData *slave) {
+  slave->state = SlaveState::EXITING_CHARGE;
 }
