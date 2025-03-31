@@ -12,7 +12,7 @@ void Master::begin(void) {
 void Master::step() {
   switch (this->chargingStationState) {
   case ChargingStationState::OPEN: {
-    if (this->currentChargingSlave != nullptr) {
+    if (this->currentChargingSlave == nullptr) {
       SlaveData *next = *this->chargingSlaves.pick();
       if (next != nullptr) {
         this->currentChargingSlave = next;
@@ -61,15 +61,30 @@ void Master::cancelCharge(SlaveData &slave) {
   Serial.printf("Commanded slave(%u) to cancel charge\n", slave.id);
 }
 
-bool Master::stepLowerGear() {}
+bool Master::stepLowerGear() {
+    this->multiColorLight.blink(5, YELLOW, TOP, 1000);
+    return true;
+}
 
-bool Master::stepLiftGear() {}
+bool Master::stepLiftGear() {
+    this->multiColorLight.blink(5, RED, TOP, 1000);
+    return true;
+}
 
-void Master::stepClosed() {}
+void Master::stepClosed() {
+    this->multiColorLight.setTopLeds(YELLOW);
+    delay(5000);
+}
 
-bool Master::stepAttachGear() {}
+bool Master::stepAttachGear() {
+    this->multiColorLight.blink(5, GREEN, TOP, 1000);
+    return true;
+}
 
-void Master::stepSlaveCharge() {}
+void Master::stepSlaveCharge() {
+    this->multiColorLight.setTopLeds(GREEN);
+    delay(5000);
+}
 
 void Master::handleWorkInfo(SlaveData &slave) {
   slave.state = SlaveState::WORK;
