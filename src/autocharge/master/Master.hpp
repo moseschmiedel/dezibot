@@ -11,8 +11,8 @@ class Master : public Dezibot {
 public:
   Master(
       AbstractSet<SlaveData *> &chargingSlaves,
-      const std::function<void(Master* master, SlaveData &slave)> &handle_slave_charge_request,
-      const std::function<void(Master* master, SlaveData &slave)> &handle_slave_stop_charge_request)
+      const std::function<void(Master* master, SlaveData *slave)> &handle_slave_charge_request,
+      const std::function<void(Master* master, SlaveData *slave)> &handle_slave_stop_charge_request)
       : chargingSlaves(chargingSlaves),
         handleSlaveChargeRequest(handle_slave_charge_request),
         handleSlaveStopChargeRequest(handle_slave_stop_charge_request) {
@@ -21,8 +21,8 @@ public:
 
   void begin() override;
   void step();
-  void enjoinCharge(SlaveData &slave);
-  void cancelCharge(SlaveData &slave);
+  void enjoinCharge(SlaveData *slave);
+  void cancelCharge(SlaveData *slave);
 
 protected:
   static Master *master;
@@ -33,9 +33,10 @@ private:
   AbstractSet<SlaveData *> &chargingSlaves;
   ChargingStationState chargingStationState = ChargingStationState::OPEN;
   SlaveData *currentChargingSlave = nullptr;
-  const std::function<void(Master* master, SlaveData &slave)> handleSlaveChargeRequest;
-  const std::function<void(Master* master, SlaveData &slave)> handleSlaveStopChargeRequest;
+  const std::function<void(Master* master, SlaveData *slave)> handleSlaveChargeRequest;
+  const std::function<void(Master* master, SlaveData *slave)> handleSlaveStopChargeRequest;
 
+  void stepOpen();
   bool stepLowerGear();
   bool stepLiftGear();
   void stepClosed();
@@ -62,9 +63,9 @@ private:
     // SlaveData *slave = new SlaveData(4200495964, SlaveState::WORK);
 
     if (message.equals("requestCharge")) {
-      master->handleSlaveChargeRequest(master, *slave);
+      master->handleSlaveChargeRequest(master, slave);
     } else if (message.equals("stopCharge")) {
-      master->handleSlaveStopChargeRequest(master, *slave);
+      master->chargingStationState = ChargingStationState::LIFTING_GEAR;
     } else if (message.equals("notifyWork")) {
       master->handleWorkInfo(slave);
     } else if (message.equals("notifyWalkToCharge")) {
