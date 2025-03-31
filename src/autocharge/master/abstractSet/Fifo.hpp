@@ -10,7 +10,7 @@ private:
   std::queue<T> queue;
 
 public:
-  void insert(T &item) override {
+  void insert(T item) override {
       queue.push(item);
   }
 
