@@ -16,7 +16,7 @@ void InfraredLED::begin(void) {
   pwmTimer = ledc_timer_config_t{.speed_mode = pwmSpeedMode,
                                  .duty_resolution = LEDC_TIMER_10_BIT,
                                  .timer_num = this->timer,
-                                 .freq_hz = 800,
+                                 .freq_hz = 10000,
                                  .clk_cfg = LEDC_AUTO_CLK};
   ledc_timer_config(&pwmTimer);
 
@@ -54,6 +54,6 @@ void InfraredLED::setDutyCycle(uint16_t dutyCycle) {
   if (dutyCycle > DUTY_CYCLE_MAX) {
     dutyCycle = DUTY_CYCLE_MAX;
   }
-  int hpoint = ledc_get_hpoint(pwmSpeedMode, channel);
-  ledc_set_duty_and_update(pwmSpeedMode, channel, dutyCycle, hpoint);
+  ledc_set_duty(pwmSpeedMode, channel, dutyCycle);
+  ledc_update_duty(pwmSpeedMode, channel);
 };
