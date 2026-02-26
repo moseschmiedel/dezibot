@@ -2,7 +2,7 @@
 
 enum class ChargingStationState {
   OPEN,
-  LOWERING_GEAR,
+  LOWERING_TO_WALK_IN,
   CLOSED,
   ATTACHING_GEAR,
   SLAVE_CHARGE,

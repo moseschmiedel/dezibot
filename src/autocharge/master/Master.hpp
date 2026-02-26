@@ -37,10 +37,10 @@ private:
   const std::function<void(Master* master, SlaveData *slave)> handleSlaveStopChargeRequest;
 
   void stepOpen();
-  bool stepLowerGear();
+  bool stepLowerToWalkIn();
+  bool stepAttachGear();
   bool stepLiftGear();
   void stepClosed();
-  bool stepAttachGear();
   void stepSlaveCharge();
 
   void handleWorkInfo(SlaveData *slave);
@@ -51,8 +51,6 @@ private:
   void handleExitChargeInfo(SlaveData *slave);
 
   static void onReceiveSingle(uint32_t from, String &message) {
-    Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
-
     auto it = master->registeredSlaves->find(from);
     SlaveData *slave = (it != master->registeredSlaves->end()) ? it->second : nullptr;
     if (slave == nullptr) {
@@ -60,11 +58,30 @@ private:
       master->registeredSlaves->insert({from, slave});
     }
 
+    if (message.startsWith("log:")) {
+      String payload = message.substring(4);
+      Serial.printf("wireless_log,%u,%s\n", from, payload.c_str());
+      return;
+    }
+
+    Serial.printf("Received single from Node(%u): %s\n", from, message.c_str());
+
     // SlaveData *slave = new SlaveData(4200495964, SlaveState::WORK);
 
     if (message.equals("requestCharge")) {
       master->handleSlaveChargeRequest(master, slave);
     } else if (message.equals("stopCharge")) {
+      if (master->currentChargingSlave == nullptr) {
+        Serial.printf("Ignoring stopCharge from Node(%u): no active charging slave\n",
+                      from);
+        return;
+      }
+      if (master->currentChargingSlave->id != from) {
+        Serial.printf(
+            "Ignoring stopCharge from Node(%u): active charging slave is Node(%u)\n",
+            from, master->currentChargingSlave->id);
+        return;
+      }
       master->chargingStationState = ChargingStationState::LIFTING_GEAR;
     } else if (message.equals("notifyWork")) {
       master->handleWorkInfo(slave);
